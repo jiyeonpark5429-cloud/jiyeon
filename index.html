@@ -631,7 +631,7 @@ window.HUFS_WORKFLOW_DATA.getVariableOptions = function(label) {
 </script>
   <script>const data = window.HUFS_WORKFLOW_DATA;
 const $ = (s) => document.querySelector(s);
-const $ = (s) => [...document.querySelectorAll(s)];
+const $$ = (s) => [...document.querySelectorAll(s)];
 const state = { view: 'home', stageId: 's1', departmentId: 'academic', categoryId: '', templateId: 'a1', phase: 'research', provider: { research: 'Perplexity', draft: 'GPT', analysis: 'NotebookLM' }, optionalOpen: false, query: '', formValues: {} };
 const phaseMeta = {
   research: { num: '6', title: '외부 사례·정책 자료 탐색', tools: ['Perplexity', 'Liner'] },
@@ -661,8 +661,8 @@ function escapeHtml(value = '') { return String(value).replace(/[&<>'"]/g, c => 
 
 function showView(view) {
   state.view = view;
-  $('.view').forEach(v => v.classList.toggle('active-view', v.id === view));
-  $('.nav-item').forEach(b => b.classList.toggle('active', b.dataset.view === view));
+  $$('.view').forEach(v => v.classList.toggle('active-view', v.id === view));
+  $$('.nav-item').forEach(b => b.classList.toggle('active', b.dataset.view === view));
   $('#breadcrumb').textContent = ({ home: '대시보드', explore: '업무 탐색', studio: '프롬프트 작업실', visual: '홍보물 제작' })[view];
   $('.sidebar').classList.remove('open'); window.scrollTo({ top: 0, behavior: 'smooth' });
 }
@@ -725,16 +725,16 @@ function renderFields(t) {
   const toggleLead = state.phase === 'research' ? '추가 업무 조건' : '추가 변수';
   const toggleHelp = state.phase === 'research' ? '배경·대상·캠퍼스 등 필요한 조건만 더 입력하세요' : '필요한 세부 조건을 펼쳐 입력하세요';
   $('#toggleOptional').innerHTML = state.optionalOpen ? '－ ' + toggleLead + ' 닫기 <span>선택한 조건을 다시 확인할 수 있습니다</span>' : '＋ ' + toggleLead + ' 선택 <span>' + toggleHelp + '</span>';
-  $('#variableForm input, #variableForm textarea, #variableForm select').forEach(el => el.addEventListener('input', () => { state.formValues[el.dataset.key] = el.value; renderResult(); }));
+  $$('#variableForm input, #variableForm textarea, #variableForm select').forEach(el => el.addEventListener('input', () => { state.formValues[el.dataset.key] = el.value; renderResult(); }));
 }
 
 function values() {
   const result = { ...state.formValues };
-  $('#variableForm [data-key]').forEach(el => { result[el.dataset.key] = el.value.trim(); });
+  $$('#variableForm [data-key]').forEach(el => { result[el.dataset.key] = el.value.trim(); });
   return result;
 }
 function captureFormValues() {
-  $('#variableForm [data-key]').forEach(el => { state.formValues[el.dataset.key] = el.value.trim(); });
+  $$('#variableForm [data-key]').forEach(el => { state.formValues[el.dataset.key] = el.value.trim(); });
 }
 function loadPhaseExample(t) {
   const set = (key, value) => { state.formValues[key] = value; };
