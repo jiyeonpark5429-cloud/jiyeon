@@ -5,15 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="한국외국어대학교 교직원을 위한 AI 업무 워크플로우 스튜디오" />
   <title>HUFS AI 업무 워크플로우 스튜디오</title>
-  <style>
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap');
+  <style>@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap');
 :root{--navy:#002d56;--navy2:#123f67;--gold:#8d7150;--ink:#17212b;--muted:#65717e;--bg:#f7f8fa;--pale:#eaf0f5;--line:#dfe6eb;--white:#fff;--shadow:0 12px 30px rgba(17,43,67,.08);--radius:18px}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:"Noto Sans KR","DM Sans",sans-serif;font-size:14px}.app-shell{display:flex;min-height:100vh}.sidebar{position:fixed;inset:0 auto 0 0;width:256px;padding:30px 18px;background:var(--navy);color:#c6d5df;display:flex;flex-direction:column;z-index:20}.brand{display:flex;align-items:center;gap:11px;color:#fff;text-decoration:none;padding:0 10px 30px;border-bottom:1px solid rgba(255,255,255,.15)}.brand img{width:43px;height:43px;border-radius:50%;object-fit:cover;background:#fff}.brand strong{display:block;font:700 20px "DM Sans";letter-spacing:1px}.brand small{display:block;font:600 8px "DM Sans";letter-spacing:1.3px;color:#aec0d0;margin-top:3px}.nav-list{padding:22px 0}.nav-item{display:block;width:100%;border:0;background:transparent;color:#b9cad8;text-align:left;padding:13px 14px;border-radius:10px;margin-bottom:4px;font:500 14px inherit;cursor:pointer}.nav-item i{display:inline-block;width:27px;font-style:normal;font-size:18px;vertical-align:-2px}.nav-item.active,.nav-item:hover{color:#fff;background:rgba(255,255,255,.13)}.sidebar-note{margin-top:auto;padding:14px;background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.12);border-radius:13px;display:flex;gap:9px}.sidebar-note>span{width:24px;height:24px;border-radius:7px;display:grid;place-items:center;background:#b79972;color:#fff;font-size:17px}.sidebar-note p{margin:0;font-size:10px;line-height:1.7}.sidebar-note b{font-size:11px;color:#fff}.sidebar-footer{padding:17px 12px 0;color:#83a0b7;font:500 10px/1.7 "DM Sans"}.main-content{margin-left:256px;width:calc(100% - 256px);min-width:0}.topbar{position:sticky;top:0;z-index:10;height:72px;padding:0 42px;background:rgba(255,255,255,.9);border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;backdrop-filter:blur(10px);font-weight:700;color:#2e475d}.top-badges{display:flex;gap:8px}.top-badges span{padding:7px 10px;border-radius:20px;background:var(--pale);color:#587087;font-size:10px}.mobile-menu{display:none}.view{display:none;max-width:1320px;margin:0 auto;padding:44px 48px 72px}.active-view{display:block}.hero{position:relative;overflow:hidden;min-height:312px;padding:48px 56px;border-radius:24px;color:#fff;background:linear-gradient(112deg,#002d56,#174d77)}.hero:after,.hero:before{content:"";position:absolute;border-radius:50%;border:1px solid rgba(255,255,255,.13)}.hero:after{width:330px;height:330px;right:-65px;bottom:-152px}.hero:before{width:180px;height:180px;right:130px;top:55px}.eyebrow{display:block;color:#bfa98d;font:700 10px "DM Sans";letter-spacing:1.6px}.hero h1{margin:12px 0;font-size:34px;line-height:1.3;letter-spacing:-1.6px}.hero em{font-style:normal;color:#e0cba9}.hero p{margin:0;color:#d8e3eb;font-size:13px;line-height:1.8}.hero-actions{display:flex;gap:9px;margin-top:24px}.button{padding:11px 16px;border-radius:9px;font:700 13px inherit;cursor:pointer}.primary{border:0;background:#dcc4a3;color:#133856}.secondary{border:1px solid rgba(255,255,255,.4);background:transparent;color:#fff}.metrics{position:relative;z-index:2;margin:-28px 36px 0;display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--line);border-radius:13px;background:#fff;box-shadow:var(--shadow)}.metrics div{display:flex;align-items:baseline;gap:9px;padding:16px 23px;border-right:1px solid var(--line)}.metrics div:last-child{border:0}.metrics b{color:var(--navy);font:700 25px "DM Sans"}.metrics span{color:var(--muted);font-size:11px}.home-section{margin-top:52px}.section-title{display:flex;align-items:end;justify-content:space-between;margin-bottom:20px}.section-title h2{margin:7px 0 0;font-size:21px;letter-spacing:-.8px}.section-title p{margin:0;color:var(--muted);font-size:12px}.section-title.compact{align-items:center}.text-button{border:0;background:transparent;color:var(--navy);font:700 12px inherit;cursor:pointer}.stage-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.stage-card{position:relative;min-height:258px;padding:24px;overflow:hidden;border:1px solid var(--line);border-radius:var(--radius);background:#fff;cursor:pointer;transition:.2s}.stage-card:hover,.recommend-card:hover,.template-card:hover{transform:translateY(-4px);box-shadow:var(--shadow);border-color:#bccbd7}.stage-card:before{content:"";position:absolute;inset:0 0 auto;height:4px;background:var(--navy)}.stage-card:nth-child(2):before{background:var(--gold)}.stage-card:nth-child(3):before{background:#386a6e}.stage-number{font:700 12px "DM Sans";color:#8295a5}.stage-icon{position:absolute;right:21px;top:21px;width:35px;height:35px;display:grid;place-items:center;border-radius:10px;background:var(--pale);font-size:19px;color:var(--navy)}.stage-card h3{margin:31px 0 9px;font-size:20px;letter-spacing:-.7px}.stage-card p{color:var(--muted);font-size:12px;line-height:1.7}.stage-card button,.template-card button{position:absolute;left:24px;bottom:20px;border:0;background:transparent;color:var(--navy);font:700 12px inherit;cursor:pointer}.quick-search{display:flex;gap:10px;padding:13px;border:1px solid var(--line);border-radius:14px;background:#fff;box-shadow:0 5px 18px rgba(20,53,78,.04)}.quick-search label{display:flex;align-items:center;flex:1;gap:10px;padding:0 8px;color:#516c81}.quick-search label span{font-size:21px}.quick-search input,.finder-search input{width:100%;border:0;outline:0;font:500 13px inherit}.quick-search button{border:0;border-radius:8px;background:var(--navy);color:#fff;padding:10px 17px;font:700 12px inherit;cursor:pointer}.recommend-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:13px}.recommend-card{min-height:157px;padding:16px;border:1px solid var(--line);border-radius:13px;background:#fff;cursor:pointer;transition:.2s}.recommend-card>span{font-size:19px;color:var(--navy)}.recommend-card small{display:block;margin-top:10px;color:#788b99;font-size:10px}.recommend-card b{display:block;margin:4px 0;font-size:13px;letter-spacing:-.5px}.recommend-card p{margin:0;color:var(--muted);font-size:10px;line-height:1.5}.page-head{padding:7px 0 26px}.page-head h1{margin:7px 0;font-size:29px;letter-spacing:-1.3px}.page-head p{margin:0;color:var(--muted);font-size:13px}.path-bar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:16px;padding:12px 14px;border:1px solid #d8e3eb;border-radius:10px;background:var(--pale);color:#466176;font-size:11px}.path-bar b{color:#91a5b4}.path-bar.dark{background:#f0f4f7}.path-bar strong{color:var(--navy)}.finder-search{display:flex;align-items:center;gap:9px;padding:12px 14px;border:1px solid var(--line);border-radius:11px;background:#fff}.finder-search>span{font-size:20px;color:#597388}.finder-search button{border:0;background:transparent;color:#6d8191;font:600 11px inherit;cursor:pointer}.explore-section{margin-top:25px;padding:21px;border:1px solid var(--line);border-radius:var(--radius);background:#fff}.explore-label{display:flex;gap:10px;align-items:center;margin-bottom:15px}.explore-label>span{width:24px;height:24px;display:grid;place-items:center;border-radius:50%;background:var(--navy);color:#fff;font:700 10px "DM Sans"}.explore-label b{display:block;font-size:13px}.explore-label small{display:block;margin-top:2px;color:var(--muted);font-size:10px}.choice-grid.stages{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.choice-card{display:flex;align-items:center;gap:10px;padding:12px;border:1px solid var(--line);border-radius:9px;background:#fff;color:#475e70;font:600 12px inherit;cursor:pointer;text-align:left}.choice-card b{color:#91a4b3;font:700 13px "DM Sans"}.choice-card.selected{border-color:var(--navy);background:#edf3f7;color:var(--navy)}.department-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:9px}.department-card{min-height:105px;padding:12px;border:1px solid var(--line);border-radius:10px;background:#fff;text-align:left;cursor:pointer;font:inherit;color:#4e6475}.department-card i{display:block;font-style:normal;color:var(--navy);font-size:20px}.department-card span{display:block;margin-top:7px;font-size:11px;font-weight:700;letter-spacing:-.4px}.department-card small{display:block;margin-top:3px;color:#8797a3;font-size:9px}.department-card.selected{border-color:var(--navy);background:#edf3f7}.chip-grid{display:flex;gap:7px;flex-wrap:wrap}.category-chip{border:1px solid var(--line);border-radius:20px;padding:8px 11px;background:#fff;color:#526979;font:600 11px inherit;cursor:pointer}.category-chip.selected{border-color:var(--gold);background:#faf5ee;color:#785d39}.template-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:13px}.template-card{position:relative;min-height:211px;padding:17px;border:1px solid var(--line);border-radius:13px;background:#fff;cursor:pointer;transition:.2s}.card-top{display:flex;justify-content:space-between}.stage-label{border-radius:5px;padding:4px 6px;background:var(--pale);color:var(--navy);font:700 10px "DM Sans"}.risk{border-radius:5px;padding:4px 6px;font:700 9px "DM Sans"}.risk.green{background:#eaf5ef;color:#297353}.risk.yellow{background:#fcf3e4;color:#997236}.risk.red{background:#fbeceb;color:#a44848}.template-card h3{margin:13px 0 7px;font-size:15px;letter-spacing:-.5px}.template-card p{margin:0;color:var(--muted);font-size:10px;line-height:1.65}.card-meta{position:absolute;left:17px;bottom:43px;display:flex;gap:5px;flex-wrap:wrap}.card-meta span{font-size:9px;color:#647c8d}.empty{padding:24px;color:#748695;font-size:12px}.studio-head{display:flex;align-items:end;justify-content:space-between}.outline-button{border:1px solid #cbd8e1;border-radius:8px;padding:9px 12px;background:#fff;color:#466177;font:600 12px inherit;cursor:pointer}.privacy-banner{display:flex;gap:11px;align-items:flex-start;margin-bottom:18px;padding:13px 15px;border:1px solid #ead9bb;border-radius:12px;background:#fff7e9;color:#6c583d}.privacy-banner>span{width:24px;height:24px;display:grid;place-items:center;border-radius:7px;background:#ecd5a9;color:#fff}.privacy-banner b{font-size:12px}.privacy-banner p{margin:3px 0 0;color:#806c51;font-size:10px;line-height:1.6}.privacy-banner button{margin-left:auto;border:0;background:transparent;color:#806c51;font-size:18px;cursor:pointer}.workflow-route{display:grid;grid-template-columns:repeat(3,1fr);gap:11px;margin-bottom:18px}.route-card{display:flex;gap:9px;align-items:flex-start;padding:14px;border:1px solid var(--line);border-radius:13px;background:#fff;text-align:left;color:#4c6375;font:inherit;cursor:pointer}.route-card>span{color:#8ca1b0;font:700 11px "DM Sans"}.route-card b{display:block;font-size:12px;color:#263f54}.route-card small{display:block;margin-top:2px;color:#8d7150;font:700 9px "DM Sans"}.route-card p{margin:6px 0 0;font-size:9px;line-height:1.5;color:#718392}.route-card>i{margin-left:auto;font-style:normal;color:#8aa0af}.route-card.active{border-color:var(--navy);background:#edf3f7}.studio-layout{display:grid;grid-template-columns:minmax(340px,.85fr) minmax(450px,1.15fr);gap:18px;align-items:start}.form-panel,.result-panel{padding:22px;border:1px solid var(--line);border-radius:var(--radius);background:#fff;box-shadow:0 4px 15px rgba(20,53,78,.04)}.panel-title{display:flex;justify-content:space-between;align-items:center;padding-bottom:15px;margin-bottom:16px;border-bottom:1px solid #edf0f2}.panel-title h2{margin:6px 0 0;font-size:16px}.step-chip{display:block;color:#58768d;font:700 9px "DM Sans";letter-spacing:.8px}.step-chip.gold{color:var(--gold)}.live-dot{color:#748795;font-size:10px}.live-dot i{display:inline-block;width:6px;height:6px;margin-right:4px;border-radius:50%;background:#4b9d79}.field{display:block;margin-bottom:13px}.field>span{display:block;color:#43596b;font-size:11px;font-weight:700}.field em{margin-left:5px;color:#a2663c;font-style:normal;font-size:9px}.field input,.field textarea,.field select{width:100%;margin-top:6px;padding:9px 10px;border:1px solid #d4dde4;border-radius:8px;background:#fff;color:var(--ink);font:400 12px/1.5 inherit;outline:none;resize:vertical}.field input:focus,.field textarea:focus,.field select:focus{border-color:#66859c;box-shadow:0 0 0 3px #e8f0f5}.more-fields{display:block;width:100%;padding:10px;border:1px dashed #bacad6;border-radius:8px;background:#fafcfd;color:#49677e;text-align:left;font:700 11px inherit;cursor:pointer}.more-fields span{margin-left:5px;color:#8999a5;font-weight:400;font-size:9px}.more-fields.open{border-style:solid;background:#edf3f7}.optional-fields{display:none;margin-top:14px;padding-top:14px;border-top:1px solid #e9eef1}.optional-fields.open{display:block}.tool-select{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:10px}.tool-button{border:1px solid var(--line);border-radius:18px;padding:7px 10px;background:#fff;color:#637789;font:700 10px "DM Sans";cursor:pointer}.tool-button.selected{border-color:var(--navy);background:var(--navy);color:#fff}.tool-guidance{margin-bottom:11px;padding:9px 11px;border-radius:8px;background:var(--pale);color:#536d7f;font-size:10px;line-height:1.55}.prompt-preview{min-height:355px;max-height:520px;margin:0;padding:15px;overflow:auto;white-space:pre-wrap;border:1px solid #e3e9ed;border-radius:10px;background:#fbfcfd;color:#304556;font:11px/1.7 "Noto Sans KR",sans-serif}.risk-box{display:flex;gap:9px;align-items:flex-start;margin-top:13px;padding:10px;border-radius:8px;font-size:10px;line-height:1.6}.risk-box b{flex:none;font:700 9px "DM Sans"}.risk-box.green{background:#eaf5ef;color:#326b53}.risk-box.yellow{background:#fcf3e4;color:#86682f}.risk-box.red{background:#fbeceb;color:#954747}.risk-box strong{display:block;margin-top:2px}.review-box{margin-top:14px;padding-top:13px;border-top:1px solid #edf0f2}.review-box>div{display:flex;gap:6px;align-items:center;font-size:11px}.review-box>div span{display:grid;place-items:center;width:17px;height:17px;border-radius:50%;background:#e8f5ef;color:#39805e}.review-box ul{margin:8px 0 0;padding-left:18px;color:#647583;font-size:10px;line-height:1.8}.result-actions{display:flex;gap:10px;align-items:center;margin-top:16px}.copy-button{border:0;border-radius:8px;padding:11px 16px;background:var(--navy);color:#fff;font:700 12px inherit;cursor:pointer}.copy-button span{margin-left:7px;font-size:15px}.result-actions span{color:#518665;font-size:10px}.toast{position:fixed;right:25px;bottom:25px;z-index:50;padding:12px 16px;border-radius:9px;background:#173d5d;color:#fff;font-size:12px;box-shadow:var(--shadow);opacity:0;transform:translateY(100px);transition:.25s}.toast.show{opacity:1;transform:translateY(0)}
 .analysis-source-guide{display:none;margin:-2px 0 16px;padding:13px;border:1px solid #d9e4eb;border-radius:10px;background:#f3f7fa;color:#496274}.analysis-source-guide:not(:empty){display:block}.analysis-source-guide .guide-kicker{display:block;margin-bottom:5px;color:#8d7150;font:700 9px "DM Sans";letter-spacing:.8px}.analysis-source-guide b{display:block;color:#27465e;font-size:11px}.analysis-source-guide ol{margin:8px 0;padding-left:19px;font-size:10px;line-height:1.8}.analysis-source-guide small{display:block;color:#778b9a;font-size:9px}
 .brand-mark{display:block;flex:none;width:48px;height:48px;overflow:hidden;border:1px solid rgba(255,255,255,.45);border-radius:50%;background:#fff}.brand-mark img{display:block;width:55px;height:auto;max-width:none;transform:translate(-3.5px,-1px);border-radius:0;background:transparent}
 .workflow-clarifier{display:flex;gap:10px;align-items:flex-start;margin:-7px 0 18px;padding:10px 12px;border:1px solid #d9e4eb;border-radius:10px;background:#f3f7fa;color:#587082;font-size:10px;line-height:1.6}.workflow-clarifier b{flex:none;color:#8d7150;font-size:10px}.workflow-clarifier strong{color:#304d64}
 @media(max-width:1120px){.sidebar{width:220px}.main-content{margin-left:220px;width:calc(100% - 220px)}.view{padding:36px 30px}.department-grid{grid-template-columns:repeat(4,1fr)}.template-grid{grid-template-columns:repeat(2,1fr)}.studio-layout{grid-template-columns:1fr}.recommend-grid{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:760px){.sidebar{width:260px;transform:translateX(-100%);transition:.25s}.sidebar.open{transform:translateX(0);box-shadow:10px 0 30px rgba(0,0,0,.2)}.main-content{width:100%;margin-left:0}.topbar{height:62px;padding:0 17px}.mobile-menu{display:block;border:0;background:transparent;color:var(--navy);font-size:20px}.top-badges span:first-child{display:none}.view{padding:25px 16px 50px}.hero{min-height:330px;padding:34px 25px;border-radius:18px}.hero h1{font-size:27px}.metrics{grid-template-columns:repeat(2,1fr);margin:-24px 10px 0}.metrics div{padding:12px 14px}.metrics div:nth-child(2){border-right:0}.metrics div:nth-child(-n+2){border-bottom:1px solid var(--line)}.stage-grid,.choice-grid.stages,.workflow-route,.template-grid{grid-template-columns:1fr}.section-title,.studio-head{align-items:flex-start;gap:10px;flex-direction:column}.department-grid{grid-template-columns:repeat(2,1fr)}.department-card{min-height:92px}.recommend-grid{grid-template-columns:1fr 1fr}.quick-search{padding:8px}.quick-search button{padding:10px 12px}.explore-section{padding:16px}.form-panel,.result-panel{padding:17px}.prompt-preview{min-height:300px}.path-bar{font-size:10px}.hero-actions{flex-wrap:wrap}}
-
+.visual-head{display:flex;justify-content:space-between;align-items:end}.visual-badge{padding:8px 12px;border-radius:999px;background:#edf3f7;color:#45667d;font:700 10px "DM Sans";letter-spacing:.4px}.visual-notice{display:flex;gap:12px;margin:0 0 18px;padding:12px 14px;border:1px solid #d9e4eb;border-radius:12px;background:#f3f7fa;color:#5d7485;font-size:11px;line-height:1.6}.visual-notice b{flex:none;color:var(--navy)}.visual-layout{display:grid;grid-template-columns:minmax(330px,.85fr) minmax(470px,1.15fr);gap:18px;align-items:start}.visual-picker,.visual-preview-panel{padding:22px;border:1px solid var(--line);border-radius:var(--radius);background:#fff;box-shadow:0 4px 15px rgba(20,53,78,.04)}.visual-step{display:flex;gap:9px;align-items:center;margin:0 0 13px}.visual-step>span{width:24px;height:24px;display:grid;place-items:center;border-radius:50%;background:var(--navy);color:#fff;font:700 10px "DM Sans"}.visual-step b{display:block;font-size:12px}.visual-step small{display:block;margin-top:2px;color:var(--muted);font-size:10px}.visual-card-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px;margin-bottom:23px}.visual-format-card{min-height:117px;padding:12px;border:1px solid var(--line);border-radius:11px;background:#fff;text-align:left;color:#536a7b;font:inherit;cursor:pointer;transition:.2s}.visual-format-card:hover{transform:translateY(-2px);border-color:#aabecb}.visual-format-card.selected{border-color:var(--navy);background:#edf3f7}.visual-format-card i{display:grid;place-items:center;width:26px;height:26px;border-radius:7px;background:#e4edf3;color:var(--navy);font-style:normal;font-size:16px}.visual-format-card b{display:block;margin:9px 0 4px;color:#334f65;font-size:11px}.visual-format-card small{display:block;color:#738593;font-size:9px;line-height:1.45}.visual-options{display:grid;grid-template-columns:1fr 1fr;gap:10px}.visual-tool-row{display:flex;align-items:center;gap:9px;margin-bottom:12px}.visual-tool-row>span{color:#6a7d8c;font-size:10px;font-weight:700}.visual-prompt{min-height:445px}.visual-review{margin-top:13px;padding:11px 13px;border:1px solid #dbe7e1;border-radius:9px;background:#f3f8f5;color:#547262;font-size:10px;line-height:1.65}.visual-review b{color:#2e6a51}.visual-review ul{margin:5px 0 0;padding-left:17px}@media(max-width:1120px){.visual-layout{grid-template-columns:1fr}.visual-prompt{min-height:330px}}@media(max-width:760px){.visual-head{align-items:flex-start;gap:10px;flex-direction:column}.visual-notice{flex-direction:column;gap:4px}.visual-card-grid,.visual-options{grid-template-columns:1fr}.visual-picker,.visual-preview-panel{padding:17px}}
 </style>
 </head>
 <body>
@@ -24,6 +23,7 @@
         <button class="nav-item active" data-view="home"><i>⌂</i> 대시보드</button>
         <button class="nav-item" data-view="explore"><i>▦</i> 업무 탐색</button>
         <button class="nav-item" data-view="studio"><i>✦</i> 프롬프트 작업실</button>
+        <button class="nav-item" data-view="visual"><i>◫</i> 홍보물 제작</button>
       </nav>
       <div class="sidebar-note"><span>⌁</span><p><b>안전한 AI 활용</b><br />입력 내용은 저장되지 않습니다.<br />개인정보·비공개정보는 제외하세요.</p></div>
       <div class="sidebar-footer">한국외국어대학교 교직원용<br />Workflow MVP v2.0</div>
@@ -74,11 +74,37 @@
           </section>
         </div>
       </section>
+
+      <section class="view" id="visual">
+        <div class="page-head visual-head">
+          <div><span class="eyebrow">VISUAL COMMUNICATION</span><h1>홍보물·인포그래픽 제작 작업실</h1><p>한국외대의 공지·행사·학생 안내를 위한 이미지 제작 프롬프트를 간단히 만듭니다.</p></div>
+          <span class="visual-badge">AI 이미지 생성용</span>
+        </div>
+        <div class="visual-notice"><b>사용 순서</b><span>내용과 일정은 먼저 확정한 뒤 입력하세요. 이미지 안의 작은 글씨·숫자·로고는 생성 결과에서 반드시 사람이 다시 확인합니다.</span></div>
+        <div class="visual-layout">
+          <section class="visual-picker">
+            <div class="visual-step"><span>1</span><div><b>만들 홍보물 선택</b><small>업무 상황에 가까운 형식을 고르세요.</small></div></div>
+            <div class="visual-card-grid" id="visualFormatChoices"></div>
+            <div class="visual-step"><span>2</span><div><b>핵심 정보 입력</b><small>필수 내용만 짧게 입력하면 됩니다.</small></div></div>
+            <label class="field"><span>제목 <em>필수</em></span><input id="visualTitle" placeholder="예: 2026학년도 2학기 수강신청 안내" /></label>
+            <label class="field"><span>대상 <em>필수</em></span><select id="visualAudience"><option>학생</option><option>외국인 학생</option><option>교원</option><option>직원</option><option>외부기관</option></select></label>
+            <label class="field"><span>꼭 전달할 내용 <em>필수</em></span><textarea id="visualMessage" rows="4" placeholder="예: 신청 기간, 대상, 신청 방법, 문의처"></textarea></label>
+            <div class="visual-options"><label class="field"><span>캠퍼스</span><select id="visualCampus"><option>공통</option><option>서울캠퍼스</option><option>글로벌캠퍼스</option></select></label><label class="field"><span>언어</span><select id="visualLanguage"><option>한국어</option><option>쉬운 한국어</option><option>영어</option><option>한영 병기</option></select></label></div>
+            <label class="field"><span>분위기</span><select id="visualMood"><option>신뢰감 있는 대학 행정</option><option>밝고 친근한 학생 안내</option><option>국제적이고 세련된 분위기</option><option>간결한 공식 안내</option></select></label>
+          </section>
+          <section class="visual-preview-panel">
+            <div class="panel-title"><div><span class="step-chip gold">STEP 3</span><h2>이미지 생성 프롬프트</h2></div><span class="live-dot"><i></i> 실시간 생성</span></div>
+            <div class="visual-tool-row"><span>권장 도구</span><button class="tool-button selected" type="button">ChatGPT 이미지 생성</button></div>
+            <pre id="visualPromptPreview" class="prompt-preview visual-prompt"></pre>
+            <div class="visual-review"><b>게시 전 확인</b><ul><li>일정·대상·URL·문의처를 공식 원문과 대조</li><li>이미지 속 한글·영문 표기와 로고 사용 여부 확인</li><li>개인정보·학생 사진·비공개 자료가 포함되지 않았는지 확인</li></ul></div>
+            <div class="result-actions"><button type="button" id="copyVisualPrompt" class="copy-button">이미지 프롬프트 복사 <span>⧉</span></button><span id="visualCopyStatus"></span></div>
+          </section>
+        </div>
+      </section>
     </main>
   </div>
   <div class="toast" id="toast"></div>
-  <script>
-window.HUFS_WORKFLOW_DATA = {
+  <script>window.HUFS_WORKFLOW_DATA = {
   workflowStages: [
     { id: 's1', number: '01', title: '근거 찾기·요건 해석', description: '규정, 공고, 첨부자료에서 대상·기준·일정·예외·리스크를 확인합니다.', instruction: '제공된 자료와 공식 출처를 구분하여 핵심 요건, 일정, 예외, 확인 필요 사항을 구조화하세요.' },
     { id: 's2', number: '02', title: '업무안 설계·문서화', description: '분석한 근거를 실행 가능한 계획과 행정 문서로 전환합니다.', instruction: '확정된 자료만 사용해 목적, 실행 항목, 역할, 일정, 산출물을 명확히 설계하세요.' },
@@ -602,12 +628,10 @@ window.HUFS_WORKFLOW_DATA.getVariableOptions = function(label) {
   if (/위험|긴급|안전|보안|비공개/.test(label)) return ['일반', '주의 필요', '즉시 확인', '승인권자 확인'];
   return ['공식 원문 기준', '부서 내부 기준', '대상별로 구분', '담당자 확인 필요'];
 };
-
 </script>
-<script>
-const data = window.HUFS_WORKFLOW_DATA;
+  <script>const data = window.HUFS_WORKFLOW_DATA;
 const $ = (s) => document.querySelector(s);
-const $$ = (s) => [...document.querySelectorAll(s)];
+const $ = (s) => [...document.querySelectorAll(s)];
 const state = { view: 'home', stageId: 's1', departmentId: 'academic', categoryId: '', templateId: 'a1', phase: 'research', provider: { research: 'Perplexity', draft: 'GPT', analysis: 'NotebookLM' }, optionalOpen: false, query: '', formValues: {} };
 const phaseMeta = {
   research: { num: '6', title: '외부 사례·정책 자료 탐색', tools: ['Perplexity', 'Liner'] },
@@ -637,9 +661,9 @@ function escapeHtml(value = '') { return String(value).replace(/[&<>'"]/g, c => 
 
 function showView(view) {
   state.view = view;
-  $$('.view').forEach(v => v.classList.toggle('active-view', v.id === view));
-  $$('.nav-item').forEach(b => b.classList.toggle('active', b.dataset.view === view));
-  $('#breadcrumb').textContent = ({ home: '대시보드', explore: '업무 탐색', studio: '프롬프트 작업실' })[view];
+  $('.view').forEach(v => v.classList.toggle('active-view', v.id === view));
+  $('.nav-item').forEach(b => b.classList.toggle('active', b.dataset.view === view));
+  $('#breadcrumb').textContent = ({ home: '대시보드', explore: '업무 탐색', studio: '프롬프트 작업실', visual: '홍보물 제작' })[view];
   $('.sidebar').classList.remove('open'); window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
@@ -701,16 +725,16 @@ function renderFields(t) {
   const toggleLead = state.phase === 'research' ? '추가 업무 조건' : '추가 변수';
   const toggleHelp = state.phase === 'research' ? '배경·대상·캠퍼스 등 필요한 조건만 더 입력하세요' : '필요한 세부 조건을 펼쳐 입력하세요';
   $('#toggleOptional').innerHTML = state.optionalOpen ? '－ ' + toggleLead + ' 닫기 <span>선택한 조건을 다시 확인할 수 있습니다</span>' : '＋ ' + toggleLead + ' 선택 <span>' + toggleHelp + '</span>';
-  $$('#variableForm input, #variableForm textarea, #variableForm select').forEach(el => el.addEventListener('input', () => { state.formValues[el.dataset.key] = el.value; renderResult(); }));
+  $('#variableForm input, #variableForm textarea, #variableForm select').forEach(el => el.addEventListener('input', () => { state.formValues[el.dataset.key] = el.value; renderResult(); }));
 }
 
 function values() {
   const result = { ...state.formValues };
-  $$('#variableForm [data-key]').forEach(el => { result[el.dataset.key] = el.value.trim(); });
+  $('#variableForm [data-key]').forEach(el => { result[el.dataset.key] = el.value.trim(); });
   return result;
 }
 function captureFormValues() {
-  $$('#variableForm [data-key]').forEach(el => { state.formValues[el.dataset.key] = el.value.trim(); });
+  $('#variableForm [data-key]').forEach(el => { state.formValues[el.dataset.key] = el.value.trim(); });
 }
 function loadPhaseExample(t) {
   const set = (key, value) => { state.formValues[key] = value; };
@@ -815,6 +839,32 @@ function selectTemplate(id) { const t = data.templates.find(x => x.id === id); s
 function toast(message) { const el = $('#toast'); el.textContent = message; el.classList.add('show'); setTimeout(() => el.classList.remove('show'), 2500); }
 function copyText(text) { if (navigator.clipboard && window.isSecureContext) return navigator.clipboard.writeText(text); const area = document.createElement('textarea'); area.value = text; area.style.cssText = 'position:fixed;opacity:0'; document.body.appendChild(area); area.select(); const ok = document.execCommand('copy'); area.remove(); return ok ? Promise.resolve() : Promise.reject(new Error('copy failed')); }
 
+const visualFormats = [
+  { id: 'poster', icon: '▣', title: '행사 포스터', description: '특강·설명회·행사의 핵심 정보를 한 장에 안내합니다.', ratio: '세로형 A4 포스터' },
+  { id: 'cardnews', icon: '▤', title: '카드뉴스', description: 'SNS에서 넘겨 보는 4~6장 핵심 안내를 구성합니다.', ratio: '정사각형 카드뉴스' },
+  { id: 'infographic', icon: '◌', title: '인포그래픽', description: '절차·일정·통계를 쉽게 읽히는 정보 구조로 만듭니다.', ratio: '세로형 인포그래픽' },
+  { id: 'notice', icon: '▧', title: '다국어 안내 이미지', description: '외국인 학생을 위한 쉬운 안내 이미지를 만듭니다.', ratio: '세로형 안내 이미지' }
+];
+const visualState = { format: 'poster' };
+function visualValue(id, fallback) { return $(id)?.value?.trim() || fallback; }
+function renderVisualFormats() {
+  $('#visualFormatChoices').innerHTML = visualFormats.map(f => `<button type="button" class="visual-format-card ${visualState.format === f.id ? 'selected' : ''}" data-visual-format="${f.id}"><i>${f.icon}</i><b>${f.title}</b><small>${f.description}</small></button>`).join('');
+}
+function visualPrompt() {
+  const format = visualFormats.find(f => f.id === visualState.format) || visualFormats[0];
+  const title = visualValue('#visualTitle', '[제목 입력 필요]');
+  const audience = visualValue('#visualAudience', '학생');
+  const message = visualValue('#visualMessage', '[대상·일정·방법 등 핵심 내용 입력 필요]');
+  const campus = visualValue('#visualCampus', '공통');
+  const language = visualValue('#visualLanguage', '한국어');
+  const mood = visualValue('#visualMood', '신뢰감 있는 대학 행정');
+  const layout = format.id === 'cardnews' ? '표지 1장과 핵심 정보를 나눈 3~5장의 카드 구성안' : `${format.ratio} 1장`;
+  const languageRule = language === '한영 병기' ? '제목과 핵심 안내를 한국어와 영어로 병기하되, 두 언어의 위계를 명확히 구분' : `${language}로 작성`;
+  return `한국외국어대학교 ${campus}의 ${format.title}을 만들어주세요.\n\n[목적]\n${audience}에게 아래 안내를 빠르게 이해시키는 ${layout}을 디자인합니다.\n\n[확정 내용]\n- 제목: ${title}\n- 핵심 내용: ${message}\n- 대상: ${audience}\n- 언어: ${languageRule}\n\n[디자인 방향]\n- 한국외대 전용의 신뢰감 있고 국제적인 대학 행정 디자인\n- 네이비(#002D56), 골드(#8D7150), 화이트와 옅은 블루를 중심으로 사용\n- 분위기: ${mood}\n- 정보의 우선순위가 제목 → 대상·기간 → 해야 할 일 → 문의 순으로 보이게 구성\n- 여백을 충분히 두고, 과도한 장식·캐릭터·스톡 사진 느낌은 피함\n- 외국인 학생 대상이라면 문화적으로 중립적인 아이콘과 쉬운 표현을 사용\n\n[주의]\n- 위에 제공한 내용 외의 일정·수치·문의처·기관명은 임의로 만들지 마세요.\n- 이미지 속 작은 글자는 왜곡될 수 있으므로, 제목·핵심 메시지만 크게 배치하고 세부 문구는 사람이 편집할 수 있는 여백으로 남겨주세요.\n- 한국외국어대학교 공식 로고는 임의로 재현하거나 변형하지 말고, 로고를 넣을 자리만 비워주세요.\n\n위 조건으로 ${format.title} 시안을 만들어주세요.`;
+}
+function renderVisualPrompt() { if ($('#visualPromptPreview')) $('#visualPromptPreview').textContent = visualPrompt(); }
+function renderVisual() { renderVisualFormats(); renderVisualPrompt(); }
+
 document.addEventListener('click', e => {
   const view = e.target.closest('[data-view]'); if (view) showView(view.dataset.view);
   const stage = e.target.closest('[data-stage]'); if (stage) { state.stageId = stage.dataset.stage; state.categoryId = ''; renderExplore(); showView('explore'); }
@@ -823,6 +873,7 @@ document.addEventListener('click', e => {
   const tmpl = e.target.closest('[data-template]'); if (tmpl) selectTemplate(tmpl.dataset.template);
   const phase = e.target.closest('[data-phase]'); if (phase) { captureFormValues(); state.phase = phase.dataset.phase; renderStudio(); }
   const provider = e.target.closest('[data-provider]'); if (provider) { state.provider[state.phase] = provider.dataset.provider; renderResult(); }
+  const visualFormat = e.target.closest('[data-visual-format]'); if (visualFormat) { visualState.format = visualFormat.dataset.visualFormat; renderVisual(); }
   if (e.target.closest('[data-start]')) { showView('explore'); renderExplore(); }
   if (e.target.closest('[data-search-focus]')) { showView('explore'); setTimeout(() => $('#exploreSearch').focus(), 100); }
   if (e.target.id === 'homeSearchButton') { state.query = $('#homeSearch').value; showView('explore'); $('#exploreSearch').value = state.query; renderExplore(); }
@@ -830,14 +881,16 @@ document.addEventListener('click', e => {
   if (e.target.closest('#toggleOptional')) { captureFormValues(); state.optionalOpen = !state.optionalOpen; renderFields(getTemplate()); }
   if (e.target.closest('#loadExample')) loadPhaseExample(getTemplate());
   if (e.target.closest('#copyPrompt')) copyText($('#promptPreview').textContent).then(() => { $('#copyStatus').textContent = '클립보드에 복사했습니다.'; toast(`${phaseMeta[state.phase].title} 프롬프트를 복사했습니다.`); }).catch(() => { $('#copyStatus').textContent = '직접 선택해 복사하세요.'; });
+  if (e.target.closest('#copyVisualPrompt')) copyText($('#visualPromptPreview').textContent).then(() => { $('#visualCopyStatus').textContent = '클립보드에 복사했습니다.'; toast('이미지 생성 프롬프트를 복사했습니다.'); }).catch(() => { $('#visualCopyStatus').textContent = '직접 선택해 복사하세요.'; });
   if (e.target.closest('#newWorkflow')) { state.stageId = 's1'; state.departmentId = 'academic'; state.categoryId = ''; state.templateId = 'a1'; state.phase = 'research'; state.formValues = {}; showView('explore'); renderExplore(); }
   if (e.target.closest('#closePrivacy')) $('#privacyBanner').style.display = 'none';
   if (e.target.closest('.mobile-menu')) $('.sidebar').classList.toggle('open');
 });
 $('#exploreSearch').addEventListener('input', e => { state.query = e.target.value; renderExplore(); });
 $('#homeSearch').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); $('#homeSearchButton').click(); } });
+['#visualTitle','#visualAudience','#visualMessage','#visualCampus','#visualLanguage','#visualMood'].forEach(id => $(id)?.addEventListener('input', renderVisualPrompt));
 renderHome(); renderExplore(); renderStudio();
-
+renderVisual();
 </script>
 </body>
 </html>
