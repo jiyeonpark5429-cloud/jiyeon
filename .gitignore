@@ -12,3 +12,8 @@ qa_handout_render/
 # Local operating-system files
 .DS_Store
 Thumbs.db
+# Local reference notes and superseded library source
+/form-library.js
+/*.txt
+/*.md
+!/README.md
