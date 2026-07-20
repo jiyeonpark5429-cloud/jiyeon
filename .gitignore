@@ -1,0 +1,14 @@
+# Authoring and QA files
+.agents/
+tools/
+qa_handout_render/
+~$*
+
+# Handouts are distributed separately; the application needs only forms/*.docx.
+*.docx
+!forms/
+!forms/*.docx
+
+# Local operating-system files
+.DS_Store
+Thumbs.db

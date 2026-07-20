@@ -1,0 +1,5 @@
+.choice-guide { margin: 8px 0 4px; color: #5d7188; font-size: 12px; font-weight: 400; line-height: 1.5; }
+.choice-field { margin-top: 12px; }
+.choice-field label { color: var(--ink); }
+.choice-field select { background: #fff; }
+.other-input { margin-top: 7px; }
