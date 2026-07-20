@@ -311,25 +311,27 @@ function selectTemplate(id) {
 }
 
 function notebookReviewRequest() {
-  return `[NotebookLM 소스 사용 방식]
-- 소스 1: Perplexity·Liner에서 받은 URL(공식 원문·근거)
-- 소스 2: GPT·Claude에서 작성한 문서 초안
-- 위 두 종류의 소스가 NotebookLM에 이미 등록되어 있다고 전제하세요. 프롬프트에 조사 결과를 다시 요구하거나 외부 검색을 하지 마세요.
-- 등록된 소스 안의 내용만 사용하고, 모든 핵심 판단에는 해당 소스의 인용·근거 위치를 표시하세요.
-
-[대조·검토 절차]
+  return `[대조·검토 절차]
 1. 문서 초안의 핵심 주장·수치·일정·대상·절차·문의처를 추출합니다.
-2. URL 근거 소스와 대조하여 ‘일치 / 불일치 / 근거 없음 / 문서에 누락’으로 분류합니다.
-3. 문서의 표현·구조·누락을 고칠 수 있는 수정 제안을 제시하되, 근거에 없는 사실은 새로 쓰지 마세요.
+2. 등록된 URL 자료와 문서 초안을 대조하여 ‘일치 / 불일치 / 근거 없음 / 문서에 누락’으로 분류합니다.
+3. 문서의 표현·구조·누락을 고칠 수 있는 수정 제안을 제시하되, 확인되지 않은 사실은 새로 쓰지 마세요.
 
 [출력 형식]
-1. 소스 등록 확인: URL 근거 소스와 문서 초안 소스가 모두 있는지 확인
-2. 근거 대조표: 문서 항목 | URL 근거·인용 | 판정 | 수정·확인 제안
-3. 누락·불일치 항목: 우선순위별 정리
-4. 담당자 확인 질문: 최대 5개
-5. 수정 전 최종 체크리스트
+1. 근거 대조표: 문서 항목 | 대조 내용 | 판정 | 수정·확인 제안
+2. 누락·불일치 항목: 우선순위별 정리
+3. 담당자 확인 질문: 최대 5개
+4. 수정 전 최종 체크리스트
 
 `;
+}
+
+function conciseReviewRequest(request) {
+  return request
+    .replaceAll('소스 안의 내용만 사용하세요. ', '')
+    .replaceAll('소스 안에서만 ', '')
+    .replaceAll('제공된 소스 안의 내용만 근거로 분석해 주세요. ', '')
+    .replaceAll('제공된 소스 안에서만 검토해 주세요. ', '')
+    .replaceAll('소스 안의 내용만 근거로 ', '');
 }
 function documentCompletionRule(tool, formData) {
   if (!['GPT', 'Claude'].includes(tool) || isResearchTool()) return '';
@@ -368,7 +370,7 @@ function buildPrompt() {
     sharedTopic() ? `- 공통 업무 주제(다음 단계까지 유지): ${sharedTopic()}` : '- 공통 업무 주제: [입력 필요]',
     ''
   ].filter(Boolean).join('\n');  const request = isReviewStage()
-    ? `${notebookReviewRequest()}${selected.request}`
+    ? `${notebookReviewRequest()}${conciseReviewRequest(selected.request)}`
     : isResearchTool()
     ? `조사 대상 기관·범위와 자료 출처 조건을 우선하여 탐색하세요. 자료 출처 조건이 비어 있으면 신뢰할 수 있는 출처를 폭넓게 탐색하되, 대학 공식자료·정부/공공기관·전문기관·언론/사례 등 출처 유형을 구분해 표시하세요. 기관별 고유 정보는 조사 대상 기관이 명시된 경우에만 정리하고, 확인되지 않은 내용은 [기관 내부 확인 필요]로 표시하세요.
 
