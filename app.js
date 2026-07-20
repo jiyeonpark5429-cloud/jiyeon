@@ -242,10 +242,27 @@ function exampleValue(key) {
   return selected.example[key] || '';
 }
 
-function documentTemplateForGroup(group) {
-  return templates.find((template) => template.group === group && template.stage === '기획·문서화') || templates.find((template) => template.group === group && template.stage !== '근거 탐색');
-}
+const documentTemplateByGroup = {
+  '교육·학사 운영': 'academic-calendar',
+  '학생·입학·국제 지원': 'student-support-brief',
+  '연구·산학 지원': 'research-grant-brief',
+  '기획·성과·평가': 'plan-report',
+  '일반행정·인사·안전': 'admin-safety-brief',
+  '재무·계약·시설': 'budget',
+  '홍보·대외협력': 'communications-brief',
+  '정보화·디지털': 'digital-plan',
+  '도서관·학술서비스': 'library-plan',
+  '평생·지역협력': 'lifelong',
+  '창업·지역협력': 'startup',
+  '생활관·시설 운영': 'residential-plan',
+  '인권·상담 지원': 'rights-plan',
+  '문화·전시 운영': 'culture-plan'
+};
 
+function documentTemplateForGroup(group) {
+  const id = documentTemplateByGroup[group];
+  return templates.find((template) => template.id === id) || templates.find((template) => template.group === group && template.stage === '기획·문서화') || templates.find((template) => template.group === group && template.stage !== '근거 탐색');
+}
 function updateWorkflowContext() {
   const group = selectedWorkflowGroup || selectedGroup || selected?.group;
   const groupBox = $('#sharedGroup');
