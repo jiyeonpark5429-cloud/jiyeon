@@ -115,3 +115,12 @@
 .skill-upload-guide p { margin: 0; color: #607489; font-size: 12px; line-height: 1.7; }
 @media (max-width: 900px) { .skill-guide-steps { grid-template-columns: repeat(2, 1fr); } .skill-builder-layout, .skill-upload-guide { grid-template-columns: 1fr; } }
 @media (max-width: 600px) { .skill-library-intro { align-items: flex-start; flex-direction: column; gap: 10px; } .skill-guide-steps { grid-template-columns: 1fr; } .skill-output { min-height: 420px; padding: 15px; } .skill-output-top { flex-direction: column; } .skill-output textarea { min-height: 330px; } }
+.workflow-context { display:flex; flex-direction:column; justify-content:center; gap:3px; padding:11px 12px; border:1px solid #84afd7; border-radius:8px; background:#0d4c88; }
+.workflow-context span { color:#b9d8f3; font-size:10px; font-weight:800; letter-spacing:.06em; }
+.workflow-context strong { color:#fff; font-size:15px; }
+.workflow-context small { color:#d9eafa; font-size:11px; line-height:1.45; }
+.evidence-input { grid-column:2 / -1; }
+.workflow-bridge .evidence-input small { display:block; margin-top:4px; color:#c9e1f7; font-size:10px; font-weight:500; }
+#evidenceToDocument { background:#f2c84b; border-color:#f2c84b; color:#153b63; }
+#evidenceToDocument:hover { background:#fff3c8; border-color:#fff3c8; }
+@media (max-width:900px){ .evidence-input { grid-column:1 / -1; } }

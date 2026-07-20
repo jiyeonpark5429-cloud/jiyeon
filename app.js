@@ -1,6 +1,7 @@
 let selected = null;
 let workflowDestination = null;
 let selectedGroup = null;
+let selectedWorkflowGroup = null;
 const $ = (selector) => document.querySelector(selector);
 const toolHints = {
   GPT: '문서화와 초안 작성에 적합합니다.',
@@ -91,6 +92,9 @@ function renderGroups() {
     const button = event.target.closest('[data-group]');
     if (!button) return;
     selectedGroup = selectedGroup === button.dataset.group ? null : button.dataset.group;
+    selectedWorkflowGroup = selectedGroup;
+    workflowDestination = selectedGroup ? documentTemplateForGroup(selectedGroup)?.id || null : null;
+    updateWorkflowContext();
     renderGroups();
     renderCards(activeStage(), $('#searchInput').value);
     renderRecommendations();
@@ -152,7 +156,7 @@ function sharedEvidence() {
 }
 
 function isResearchTool() {
-  return ['Perplexity', 'Liner'].includes($('#toolSelect')?.value);
+  return selected?.stage === '근거 탐색' || ['Perplexity', 'Liner'].includes($('#toolSelect')?.value);
 }
 
 
@@ -214,6 +218,20 @@ function exampleValue(key) {
   return selected.example[key] || '';
 }
 
+function documentTemplateForGroup(group) {
+  return templates.find((template) => template.group === group && template.stage === '기획·문서화') || templates.find((template) => template.group === group && template.stage !== '근거 탐색');
+}
+
+function updateWorkflowContext() {
+  const group = selectedWorkflowGroup || selectedGroup || selected?.group;
+  const groupBox = $('#sharedGroup');
+  const status = $('#contextStatus');
+  if (!groupBox || !status) return;
+  groupBox.textContent = group || '업무군을 먼저 선택해 주세요';
+  status.textContent = group
+    ? `‘${group}’ 업무 흐름으로 고정됨 · 주제와 조사 결과는 문서화 단계에 그대로 전달됩니다.`
+    : '업무 탐색에서 업무군 또는 템플릿을 선택하면 이 흐름이 고정됩니다.';
+}
 function renderTemplateExample() {
   const box = $('#templateExample');
   if (!selected || !box) return;
@@ -225,12 +243,20 @@ function renderTemplateExample() {
       const input = $(`#formFields [name="${key}"]`);
       if (input && exampleValue(key)) input.value = exampleValue(key);
     });
+    if (selected?.stage === '근거 탐색') { const topic = $('#formFields [name="topic"]'); if (topic?.value.trim()) $('#sharedTopic').value = topic.value.trim(); }
     buildPrompt();
     $('#applyExample').textContent = '예시 적용 완료';
   });
 }
 function selectTemplate(id) {
   selected = templates.find((template) => template.id === id);
+  selectedGroup = selected.group;
+  selectedWorkflowGroup = selected.group;
+  if (selected.stage === '근거 탐색') workflowDestination = documentTemplateForGroup(selected.group)?.id || null;
+  if (selected.stage === '기획·문서화') workflowDestination = selected.id;
+  renderGroups();
+  renderRecommendations();
+  updateWorkflowContext();
   $('#selectedStage').textContent = `${selected.stage} · ${selected.group}`;
   $('#selectedTemplate').textContent = selected.title;
   $('#outputTitle').textContent = selected.title;
@@ -240,7 +266,10 @@ function selectTemplate(id) {
   const optional = options.length ? `<details><summary>추가 선택 사항 열기</summary><p class="choice-guide">문서 성격에 맞는 선택지를 고르세요. GPT·Claude에서는 성공 기준과 제약 조건도 함께 정할 수 있습니다.</p>${options.map(optionalField).join('')}</details>` : '';
   $('#formFields').innerHTML = required + optional;
   renderTemplateExample();
-  $('#promptForm').querySelectorAll('textarea, input, select').forEach((input) => input.addEventListener('input', buildPrompt));
+  $('#promptForm').querySelectorAll('textarea, input, select').forEach((input) => input.addEventListener('input', () => {
+    if (selected?.stage === '근거 탐색' && input.name === 'topic' && input.value.trim()) $('#sharedTopic').value = input.value.trim();
+    buildPrompt();
+  }));
   $('#promptForm').querySelectorAll('select[name^="optional"]').forEach((select) => select.addEventListener('change', () => {
     const other = $(`[name="optionalOther${select.name.replace('optional', '')}"]`);
     if (other) { other.hidden = !select.value.includes('직접 입력'); if (other.hidden) other.value = ''; }
@@ -272,11 +301,13 @@ function buildPrompt() {
     if (choice === '기타 직접 입력' && other) lines.push(`- ${label}: ${other}`);
   });
   const tool = $('#toolSelect').value;
+  const workflowGroup = selectedWorkflowGroup || selectedGroup || selected.group;
   const sharedContext = [
-    sharedTopic() ? `- 공통 업무 주제: ${sharedTopic()}` : '',
-    !isResearchTool() && sharedEvidence() ? `- 이전 단계에서 수집한 근거·출처:\n${sharedEvidence()}` : ''
-  ].filter(Boolean).join('\n');
-  const request = isResearchTool()
+    `- 선택 업무군: ${workflowGroup}`,
+    sharedTopic() ? `- 공통 업무 주제(다음 단계까지 유지): ${sharedTopic()}` : '- 공통 업무 주제: [입력 필요]',
+    !isResearchTool() && sharedEvidence() ? `- Perplexity·Liner에서 수집한 제공 근거(아래 내용만 활용):
+${sharedEvidence()}` : ''
+  ].filter(Boolean).join('\n');  const request = isResearchTool()
     ? `조사 대상 기관·범위와 자료 출처 조건을 우선하여 탐색하세요. 자료 출처 조건이 비어 있으면 신뢰할 수 있는 출처를 폭넓게 탐색하되, 대학 공식자료·정부/공공기관·전문기관·언론/사례 등 출처 유형을 구분해 표시하세요. 기관별 고유 정보는 조사 대상 기관이 명시된 경우에만 정리하고, 확인되지 않은 내용은 [기관 내부 확인 필요]로 표시하세요.
 
 최종 결과는 조사 항목별 핵심 내용, 출처 URL, 게시·수정 시점, 출처 유형, 확인 필요 사항을 구분하여 정리해주세요.`
@@ -284,27 +315,37 @@ function buildPrompt() {
   $('#promptOutput').value = `당신은 ${expertRole()}입니다.\n\n[업무 맥락]\n- 업무: ${selected.title}\n- 선택 도구: ${tool}\n${sharedContext ? `${sharedContext}\n` : ''}${lines.join('\n')}\n\n[요청]\n${request}\n\n[안전 및 검토]\n${safety}\n- 최종 결과는 담당자가 공식 자료와 대조해 검토해야 합니다.`;
 }
 
-$('#toolSelect').addEventListener('change', (event) => { $('#toolHint').textContent = toolHints[event.target.value]; if (selected) { selected.tool = event.target.value; selectTemplate(selected.id); } else buildPrompt(); });
+$('#toolSelect').addEventListener('change', (event) => { $('#toolHint').textContent = toolHints[event.target.value]; buildPrompt(); });
 $('#searchInput').addEventListener('input', (event) => renderCards(activeStage(), event.target.value));
-$('#clearGroup').addEventListener('click', () => { selectedGroup = null; renderGroups(); renderCards(activeStage(), $('#searchInput').value); renderRecommendations(); });
+$('#clearGroup').addEventListener('click', () => { selectedGroup = null; selectedWorkflowGroup = null; workflowDestination = null; updateWorkflowContext(); renderGroups(); renderCards(activeStage(), $('#searchInput').value); renderRecommendations(); });
 $('#sharedTopic').addEventListener('input', buildPrompt);
 $('#sharedEvidence').addEventListener('input', buildPrompt);
 const researchTemplateByGroup = {
   '교육·학사 운영': 'academic-evidence', '학생·입학·국제 지원': 'admission-evidence', '연구·산학 지원': 'research-evidence', '기획·성과·평가': 'performance-evidence', '일반행정·인사·안전': 'admin-evidence', '재무·계약·시설': 'finance-evidence', '홍보·대외협력': 'communications-evidence', '정보화·디지털': 'it-evidence', '도서관·학술서비스': 'library-evidence', '평생·지역협력': 'community-evidence', '창업·지역협력': 'startup-evidence', '생활관·시설 운영': 'residential-evidence', '인권·상담 지원': 'rights-evidence', '문화·전시 운영': 'culture-evidence'
 };
 
+$('#evidenceToDocument').addEventListener('click', () => {
+  const group = selectedWorkflowGroup || selectedGroup || selected?.group;
+  if (!group) { alert('먼저 업무 탐색에서 업무군 또는 템플릿을 선택해 주세요.'); location.hash = 'explore'; return; }
+  if (!sharedTopic()) { alert('공통 업무 주제를 먼저 입력해 주세요.'); $('#sharedTopic').focus(); return; }
+  if (!sharedEvidence()) { alert('Perplexity·Liner에서 받은 조사 결과물을 붙여 넣어 주세요.'); $('#sharedEvidence').focus(); return; }
+  const nextTemplate = documentTemplateForGroup(group);
+  if (nextTemplate) { activateStage(nextTemplate.stage); selectTemplate(nextTemplate.id); }
+});
+
 document.querySelectorAll('[data-next-stage]').forEach((button) => button.addEventListener('click', () => {
   const nextStage = button.dataset.nextStage;
   const tab = document.querySelector(`[data-stage="${nextStage}"]`);
   if (tab) tab.click();
   let nextTemplate;
-  if (nextStage === '근거 탐색' && selected && selected.stage !== '근거 탐색') {
-    workflowDestination = selected.id;
-    nextTemplate = templates.find((template) => template.id === researchTemplateByGroup[selected.group]);
-  } else if (nextStage === '기획·문서화' && workflowDestination) {
-    nextTemplate = templates.find((template) => template.id === workflowDestination);
-  }
-  nextTemplate ||= templates.find((template) => template.stage === nextStage);
+  const workflowGroup = selectedWorkflowGroup || selectedGroup || selected?.group;
+  if (nextStage === '근거 탐색' && workflowGroup) {
+    nextTemplate = templates.find((template) => template.id === researchTemplateByGroup[workflowGroup]);
+  } else if (nextStage === '기획·문서화' && workflowGroup) {
+    nextTemplate = workflowDestination ? templates.find((template) => template.id === workflowDestination) : documentTemplateForGroup(workflowGroup);
+  } else if (nextStage === '분석·검토' && workflowGroup) {
+    nextTemplate = templates.find((template) => template.group === workflowGroup && template.stage === '분석·검토');
+  }  nextTemplate ||= templates.find((template) => template.stage === nextStage);
   if (nextTemplate) selectTemplate(nextTemplate.id);
 }));
 $('#copyButton').addEventListener('click', async () => { try { await navigator.clipboard.writeText($('#promptOutput').value); $('#copyButton').textContent = '복사 완료!'; setTimeout(() => { $('#copyButton').textContent = '복사하기'; }, 1500); } catch { alert('프롬프트를 선택해 복사해 주세요.'); } });
