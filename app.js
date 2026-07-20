@@ -186,24 +186,41 @@ function expertRole() {
   if (selected?.stage === '기획·문서화') return `${domain} 분야의 기획서·행정문서 작성 전문가`;
   return `${domain} 분야의 업무 설계 전문가`;
 }
+function evidenceFieldKeys() {
+  return ['facts', 'sources', 'source', 'notes', 'documents', 'material', 'evidence', 'approved', 'basis', 'feedback', 'data', 'researchResults'];
+}
+
 function activeFields() {
-  if (!selected || !isResearchTool()) return selected?.fields || [];
-  return [
-    ['institution', '조사 대상 기관·범위', '예: 서울시립대학교 학부 과정 / 수도권 4년제 대학 3곳 비교'],
-    ['topic', '조사 주제', '예: 2026학년도 2학기 수강신청 변경 안내'],
-    ['audience', '활용 목적', '예: 학생 안내문 작성 전 사실 확인'],
-    ['sourceRule', '자료 출처 조건 (선택)', '예: 대학 공식 홈페이지·규정·공지 우선 / 제한 없음', true]
-  ];
+  if (!selected) return [];
+  if (isResearchTool()) {
+    return [
+      ['institution', '조사 대상 기관·범위', '예: 서울시립대학교 학부 과정 / 수도권 4년제 대학 3곳 비교'],
+      ['topic', '조사 주제', '예: 2026학년도 2학기 수강신청 변경 안내'],
+      ['audience', '활용 목적', '예: 학생 안내문 작성 전 사실 확인'],
+      ['sourceRule', '자료 출처 조건 (선택)', '예: 대학 공식 홈페이지·규정·공지 우선 / 제한 없음', true]
+    ];
+  }
+  const base = selected.fields || [];
+  const tool = $('#toolSelect')?.value || selected.tool;
+  if (!['GPT', 'Claude'].includes(tool)) return base;
+  let hasEvidenceField = false;
+  const normalized = base.map(([key, label, placeholder, optional]) => {
+    if (!evidenceFieldKeys().includes(key)) return [key, label, placeholder, optional];
+    hasEvidenceField = true;
+    return [key, 'Perplexity·Liner에서 수집한 자료·출처', '앞 단계에서 받은 결과물(핵심 사실, URL, 날짜, 수치)을 붙여 넣으세요.', optional];
+  });
+  return hasEvidenceField
+    ? normalized
+    : [...normalized, ['researchResults', 'Perplexity·Liner에서 수집한 자료·출처', '앞 단계에서 받은 결과물(핵심 사실, URL, 날짜, 수치)을 붙여 넣으세요.']];
 }
 function inheritedValue(key, fallback) {
   if (['topic', 'purpose', 'event', 'program', 'service'].includes(key) && sharedTopic()) return sharedTopic();
-  if (!isResearchTool() && ['facts', 'sources', 'source', 'notes', 'documents', 'material', 'evidence', 'approved', 'basis', 'feedback', 'data'].includes(key) && sharedEvidence()) return sharedEvidence();
+  if (!isResearchTool() && evidenceFieldKeys().includes(key)) return sharedEvidence();
   return fallback || '';
 }
-
 function fieldGuide(key) {
-  const evidenceKeys = ['facts', 'sources', 'source', 'notes', 'documents', 'material', 'evidence', 'approved', 'basis', 'feedback', 'data'];
-  if (evidenceKeys.includes(key)) return '무엇을 넣나요? 이미 확인된 정보만 넣으세요. 예: 공식 공지의 일정·장소·대상·신청 방법·문의처, 승인된 수치, 회의록, 링크 또는 자료 발췌입니다. 아직 정해지지 않은 내용은 넣지 말고 [확인 필요]라고 표시하세요.';
+  const evidenceKeys = evidenceFieldKeys();
+  if (evidenceKeys.includes(key)) return '무엇을 넣나요? Perplexity·Liner에서 수집한 결과를 그대로 붙여 넣으세요. 핵심 사실, URL, 게시일·기준일, 수치를 포함합니다. 이 칸은 예시가 아니라 실제 조사 결과를 넣는 곳입니다.';
   if (['topic', 'purpose', 'event', 'program', 'service'].includes(key)) return '무엇을 넣나요? 이번에 만들 문서의 주제와 목적을 한 문장으로 적으세요. 예: “2026학년도 2학기 수강신청 변경 안내”입니다.';
   if (['audience', 'owner'].includes(key)) return '무엇을 넣나요? 이 문서를 읽거나 실행할 사람을 구체적으로 적으세요. 예: 재학생, 학과 조교, 행사 운영 담당자입니다.';
   if (key === 'institution') return '무엇을 넣나요? 반드시 조사할 대학·기관 또는 비교 범위를 구체적으로 적으세요. 예: “서울시립대학교 학부 과정”, “수도권 사립대 3곳”, “A대학교와 B대학교 비교”입니다. 이 정보가 없으면 기관별 일정·절차를 정확히 조사할 수 없습니다.';
@@ -214,6 +231,7 @@ function exampleValue(key) {
   if (!selected) return '';
   if (key === 'institution') return '서울시립대학교 학부 과정';
   if (key === 'sourceRule') return '대학 공식 홈페이지·규정·공지 우선';
+  if (evidenceFieldKeys().includes(key)) return '';
   if (key === 'scope') return selected.example.sources || selected.example.source || selected.example.facts || '서울시립대학교 및 관련 공공기관의 공식 공개 자료';
   return selected.example[key] || '';
 }
@@ -268,6 +286,7 @@ function selectTemplate(id) {
   renderTemplateExample();
   $('#promptForm').querySelectorAll('textarea, input, select').forEach((input) => input.addEventListener('input', () => {
     if (selected?.stage === '근거 탐색' && input.name === 'topic' && input.value.trim()) $('#sharedTopic').value = input.value.trim();
+    if (!isResearchTool() && evidenceFieldKeys().includes(input.name)) $('#sharedEvidence').value = input.value;
     buildPrompt();
   }));
   $('#promptForm').querySelectorAll('select[name^="optional"]').forEach((select) => select.addEventListener('change', () => {
@@ -305,8 +324,7 @@ function buildPrompt() {
   const sharedContext = [
     `- 선택 업무군: ${workflowGroup}`,
     sharedTopic() ? `- 공통 업무 주제(다음 단계까지 유지): ${sharedTopic()}` : '- 공통 업무 주제: [입력 필요]',
-    !isResearchTool() && sharedEvidence() ? `- Perplexity·Liner에서 수집한 제공 근거(아래 내용만 활용):
-${sharedEvidence()}` : ''
+    ''
   ].filter(Boolean).join('\n');  const request = isResearchTool()
     ? `조사 대상 기관·범위와 자료 출처 조건을 우선하여 탐색하세요. 자료 출처 조건이 비어 있으면 신뢰할 수 있는 출처를 폭넓게 탐색하되, 대학 공식자료·정부/공공기관·전문기관·언론/사례 등 출처 유형을 구분해 표시하세요. 기관별 고유 정보는 조사 대상 기관이 명시된 경우에만 정리하고, 확인되지 않은 내용은 [기관 내부 확인 필요]로 표시하세요.
 
