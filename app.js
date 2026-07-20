@@ -141,6 +141,7 @@ function activeOptionalOptions() {
   const base = selected.optional || [];
   if (!['GPT', 'Claude'].includes($('#toolSelect').value)) return base;
   return [...base,
+    { label: '작성 방식', choices: ['실습용: 가정 수치로 바로 완성', '실제 업무용: 필요한 내용 먼저 질문'] },
     { label: '성공 기준', choices: successCriteriaByGroup[selected.group] || successCriteriaByGroup['일반행정·인사·안전'] },
     { label: '제약 조건', choices: constraintsByRisk[selected.risk] }
   ];
@@ -280,7 +281,7 @@ function selectTemplate(id) {
   $('#toolSelect').value = selected.tool;
   const required = activeFields().map(([key, label, placeholder]) => `<label>${label}<small class="field-guide">${fieldGuide(key)}</small><textarea name="${key}" placeholder="${placeholder}">${inheritedValue(key, selected.example[key])}</textarea></label>`).join('');
   const options = activeOptionalOptions();
-  const optional = options.length ? `<details><summary>추가 선택 사항 열기</summary><p class="choice-guide">문서 성격에 맞는 선택지를 고르세요. GPT·Claude에서는 성공 기준과 제약 조건도 함께 정할 수 있습니다.</p>${options.map(optionalField).join('')}</details>` : '';
+  const optional = options.length ? `<details><summary>추가 선택 사항 열기</summary><p class="choice-guide">여러 항목을 함께 고를 수 있습니다. GPT·Claude에서는 작성 방식도 선택할 수 있으며, 선택하지 않으면 실습용 즉시 완성으로 진행됩니다.</p>${options.map(optionalField).join('')}</details>` : '';
   $('#formFields').innerHTML = required + optional;
   renderTemplateExample();
   $('#promptForm').querySelectorAll('textarea, input, select').forEach((input) => input.addEventListener('input', () => {
@@ -302,6 +303,21 @@ function selectTemplate(id) {
   location.hash = 'studio';
 }
 
+function documentCompletionRule(tool, formData) {
+  if (!['GPT', 'Claude'].includes(tool) || isResearchTool()) return '';
+  const actualMode = [...formData.values()].some((value) => typeof value === 'string' && value.startsWith('실제 업무용'));
+  if (actualMode) return `[작성 절차 — 실제 업무용]
+1. 문서를 만들기 위해 꼭 필요한 정보가 비어 있으면, 한 번에 최대 3개의 짧은 질문만 하세요. 질문 외에 설명·초안·가정 수치는 출력하지 마세요.
+2. 사용자가 답하면 같은 대화에서 이미 받은 내용까지 모두 반영해 문서를 바로 완성하세요. 이미 받은 정보를 다시 묻지 말고 추가 질문도 최소화하세요.
+3. 필수 정보가 충분하면 질문 없이 바로 완성 문서를 출력하세요.
+4. 확정되지 않은 실제 정보는 임의로 만들지 말고 [확인 필요]로 표시하세요.`;
+  return `[작성 절차 — 실습용 즉시 완성]
+1. 추가 질문이나 일반적인 안내를 먼저 출력하지 말고, 지금 제공된 정보만으로 요청한 문서를 바로 완성하세요.
+2. 인원·예산·기간·성과 수치처럼 문서 완성에 필요하지만 제공되지 않은 값은 문서 성격에 맞는 [실습용 가정]으로 채우세요. 예: 참여 인원 120명, 만족도 4.3/5.0, 예산 집행률 92%, 전년 대비 12% 증가.
+3. 가정한 모든 수치와 기관 고유 정보에는 [실습용 가정] 표시를 붙이고, 문서 끝에 ‘실제 업무 전 교체할 항목’을 목록으로 정리하세요. 이를 실제 사실·성과·공식 수치처럼 표현하지 마세요.
+4. 결과는 설명이 아니라 바로 사용할 수 있는 완성 문서 본문으로 시작하세요.
+5. 사용자가 ‘실제 업무용: 필요한 내용 먼저 질문’을 선택한 경우에만, 문서 작성 전 필요한 내용을 최대 3개 질문으로 확인하세요.`;
+}
 function buildPrompt() {
   if (!selected) return;
   const formData = new FormData($('#promptForm'));
@@ -327,7 +343,7 @@ function buildPrompt() {
     ? `조사 대상 기관·범위와 자료 출처 조건을 우선하여 탐색하세요. 자료 출처 조건이 비어 있으면 신뢰할 수 있는 출처를 폭넓게 탐색하되, 대학 공식자료·정부/공공기관·전문기관·언론/사례 등 출처 유형을 구분해 표시하세요. 기관별 고유 정보는 조사 대상 기관이 명시된 경우에만 정리하고, 확인되지 않은 내용은 [기관 내부 확인 필요]로 표시하세요.
 
 최종 결과는 조사 항목별 핵심 내용, 출처 URL, 게시·수정 시점, 출처 유형, 확인 필요 사항을 구분하여 정리해주세요.`
-    : selected.request;  const safety = selected.risk === '높음' ? '개인정보·비공개 정보는 사용하지 말고, 승인·평가·계약 등 판단을 대신하지 마세요.' : '확정되지 않은 기관 고유 정보는 [기관 내부 확인 필요]로 표시하고, 사실을 임의로 만들지 마세요.';
+    : `${selected.request}` + (documentCompletionRule(tool, formData) ? `\n\n${documentCompletionRule(tool, formData)}` : '');  const safety = selected.risk === '높음' ? '개인정보·비공개 정보는 사용하지 말고, 승인·평가·계약 등 판단을 대신하지 마세요.' : '확정되지 않은 기관 고유 정보는 [기관 내부 확인 필요]로 표시하고, 사실을 임의로 만들지 마세요.';
   $('#promptOutput').value = `당신은 ${expertRole()}입니다.\n\n[업무 맥락]\n- 업무: ${selected.title}\n- 선택 도구: ${tool}\n${sharedContext ? `${sharedContext}\n` : ''}${lines.join('\n')}\n\n[요청]\n${request}\n\n[안전 및 검토]\n${safety}\n- 최종 결과는 담당자가 공식 자료와 대조해 검토해야 합니다.`;
 }
 
