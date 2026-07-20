@@ -124,3 +124,7 @@
 #evidenceToDocument { background:#f2c84b; border-color:#f2c84b; color:#153b63; }
 #evidenceToDocument:hover { background:#fff3c8; border-color:#fff3c8; }
 @media (max-width:900px){ .evidence-input { grid-column:1 / -1; } }
+.notebooklm-source-guide { margin:0 0 14px; padding:12px 13px; border:1px solid #c9dced; border-radius:8px; color:#355672; background:#f3f8fd; font-size:11px; line-height:1.6; }
+.notebooklm-source-guide b { display:block; color:#07509f; font-size:12px; }
+.notebooklm-source-guide ol { margin:6px 0 5px; padding-left:18px; }
+.notebooklm-source-guide small { color:#607891; }

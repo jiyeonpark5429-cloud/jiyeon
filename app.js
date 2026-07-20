@@ -159,7 +159,9 @@ function isResearchTool() {
   return selected?.stage === '근거 탐색' || ['Perplexity', 'Liner'].includes($('#toolSelect')?.value);
 }
 
-
+function isReviewStage() {
+  return selected?.stage === '분석·검토' && ($('#toolSelect')?.value || selected?.tool) === 'NotebookLM';
+}
 const expertDomainByGroup = {
   '교육·학사 운영': '대학 학사행정·교육과정 운영',
   '학생·입학·국제 지원': '대학 학생지원·입학·국제교류 행정',
@@ -192,14 +194,16 @@ function evidenceFieldKeys() {
 
 function activeFields() {
   if (!selected) return [];
-  if (isResearchTool()) {
-    return [
-      ['institution', '조사 대상 기관·범위', '예: 서울시립대학교 학부 과정 / 수도권 4년제 대학 3곳 비교'],
-      ['topic', '조사 주제', '예: 2026학년도 2학기 수강신청 변경 안내'],
-      ['audience', '활용 목적', '예: 학생 안내문 작성 전 사실 확인'],
-      ['sourceRule', '자료 출처 조건 (선택)', '예: 대학 공식 홈페이지·규정·공지 우선 / 제한 없음', true]
-    ];
-  }
+  if (isReviewStage()) return [
+    ['lens', '대조·검토 관점', '예: 목적, 대상, 일정, 수치, 절차, 문의처의 일치 여부'],
+    ['output', '원하는 검토 결과', '예: 근거 일치표, 누락 항목, 수정 제안, 담당자 확인 질문']
+  ];
+  if (isResearchTool()) return [
+    ['institution', '조사 대상 기관·범위', '예: 서울시립대학교 학부 과정 / 수도권 4년제 대학 3곳 비교'],
+    ['topic', '조사 주제', '예: 2026학년도 2학기 수강신청 변경 안내'],
+    ['audience', '활용 목적', '예: 학생 안내문 작성 전 사실 확인'],
+    ['sourceRule', '자료 출처 조건 (선택)', '예: 대학 공식 홈페이지·규정·공지 우선 / 제한 없음', true]
+  ];
   const base = selected.fields || [];
   const tool = $('#toolSelect')?.value || selected.tool;
   if (!['GPT', 'Claude'].includes(tool)) return base;
@@ -209,11 +213,13 @@ function activeFields() {
     hasEvidenceField = true;
     return [key, 'Perplexity·Liner에서 수집한 자료·출처', '앞 단계에서 받은 결과물(핵심 사실, URL, 날짜, 수치)을 붙여 넣으세요.', optional];
   });
-  return hasEvidenceField
-    ? normalized
-    : [...normalized, ['researchResults', 'Perplexity·Liner에서 수집한 자료·출처', '앞 단계에서 받은 결과물(핵심 사실, URL, 날짜, 수치)을 붙여 넣으세요.']];
+  return hasEvidenceField ? normalized : [...normalized, ['researchResults', 'Perplexity·Liner에서 수집한 자료·출처', '앞 단계에서 받은 결과물(핵심 사실, URL, 날짜, 수치)을 붙여 넣으세요.']];
 }
 function inheritedValue(key, fallback) {
+  if (isReviewStage()) {
+    if (key === 'lens') return '목적, 대상, 일정, 수치, 절차, 문의처의 근거 일치·차이·누락 여부';
+    if (key === 'output') return '근거 일치표, 불일치·누락 항목, 문서 수정 제안, 담당자 확인 질문';
+  }
   if (['topic', 'purpose', 'event', 'program', 'service'].includes(key) && sharedTopic()) return sharedTopic();
   if (!isResearchTool() && evidenceFieldKeys().includes(key)) return sharedEvidence();
   return fallback || '';
@@ -282,7 +288,8 @@ function selectTemplate(id) {
   const required = activeFields().map(([key, label, placeholder]) => `<label>${label}<small class="field-guide">${fieldGuide(key)}</small><textarea name="${key}" placeholder="${placeholder}">${inheritedValue(key, selected.example[key])}</textarea></label>`).join('');
   const options = activeOptionalOptions();
   const optional = options.length ? `<details><summary>추가 선택 사항 열기</summary><p class="choice-guide">여러 항목을 함께 고를 수 있습니다. GPT·Claude에서는 작성 방식도 선택할 수 있으며, 선택하지 않으면 실습용 즉시 완성으로 진행됩니다.</p>${options.map(optionalField).join('')}</details>` : '';
-  $('#formFields').innerHTML = required + optional;
+    const notebookGuide = isReviewStage() ? `<div class="notebooklm-source-guide"><b>NotebookLM 소스 등록 순서</b><ol><li>Perplexity·Liner에서 받은 공식 URL을 웹페이지 소스로 등록</li><li>GPT·Claude에서 만든 문서 초안을 파일 또는 텍스트 소스로 등록</li><li>아래 프롬프트로 두 소스의 일치·차이·누락을 대조</li></ol><small>조사 결과를 이 화면에 다시 붙여 넣을 필요가 없습니다.</small></div>` : '';
+  $('#formFields').innerHTML = notebookGuide + required + optional;
   renderTemplateExample();
   $('#promptForm').querySelectorAll('textarea, input, select').forEach((input) => input.addEventListener('input', () => {
     if (selected?.stage === '근거 탐색' && input.name === 'topic' && input.value.trim()) $('#sharedTopic').value = input.value.trim();
@@ -303,6 +310,27 @@ function selectTemplate(id) {
   location.hash = 'studio';
 }
 
+function notebookReviewRequest() {
+  return `[NotebookLM 소스 사용 방식]
+- 소스 1: Perplexity·Liner에서 받은 URL(공식 원문·근거)
+- 소스 2: GPT·Claude에서 작성한 문서 초안
+- 위 두 종류의 소스가 NotebookLM에 이미 등록되어 있다고 전제하세요. 프롬프트에 조사 결과를 다시 요구하거나 외부 검색을 하지 마세요.
+- 등록된 소스 안의 내용만 사용하고, 모든 핵심 판단에는 해당 소스의 인용·근거 위치를 표시하세요.
+
+[대조·검토 절차]
+1. 문서 초안의 핵심 주장·수치·일정·대상·절차·문의처를 추출합니다.
+2. URL 근거 소스와 대조하여 ‘일치 / 불일치 / 근거 없음 / 문서에 누락’으로 분류합니다.
+3. 문서의 표현·구조·누락을 고칠 수 있는 수정 제안을 제시하되, 근거에 없는 사실은 새로 쓰지 마세요.
+
+[출력 형식]
+1. 소스 등록 확인: URL 근거 소스와 문서 초안 소스가 모두 있는지 확인
+2. 근거 대조표: 문서 항목 | URL 근거·인용 | 판정 | 수정·확인 제안
+3. 누락·불일치 항목: 우선순위별 정리
+4. 담당자 확인 질문: 최대 5개
+5. 수정 전 최종 체크리스트
+
+`;
+}
 function documentCompletionRule(tool, formData) {
   if (!['GPT', 'Claude'].includes(tool) || isResearchTool()) return '';
   const actualMode = [...formData.values()].some((value) => typeof value === 'string' && value.startsWith('실제 업무용'));
@@ -339,7 +367,9 @@ function buildPrompt() {
     `- 선택 업무군: ${workflowGroup}`,
     sharedTopic() ? `- 공통 업무 주제(다음 단계까지 유지): ${sharedTopic()}` : '- 공통 업무 주제: [입력 필요]',
     ''
-  ].filter(Boolean).join('\n');  const request = isResearchTool()
+  ].filter(Boolean).join('\n');  const request = isReviewStage()
+    ? `${notebookReviewRequest()}${selected.request}`
+    : isResearchTool()
     ? `조사 대상 기관·범위와 자료 출처 조건을 우선하여 탐색하세요. 자료 출처 조건이 비어 있으면 신뢰할 수 있는 출처를 폭넓게 탐색하되, 대학 공식자료·정부/공공기관·전문기관·언론/사례 등 출처 유형을 구분해 표시하세요. 기관별 고유 정보는 조사 대상 기관이 명시된 경우에만 정리하고, 확인되지 않은 내용은 [기관 내부 확인 필요]로 표시하세요.
 
 최종 결과는 조사 항목별 핵심 내용, 출처 URL, 게시·수정 시점, 출처 유형, 확인 필요 사항을 구분하여 정리해주세요.`
