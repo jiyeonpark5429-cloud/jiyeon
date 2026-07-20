@@ -134,9 +134,8 @@ function optionChoices(option) {
 function optionalField(option, index) {
   const label = optionLabel(option);
   const choices = optionChoices(option);
-  return `<div class="choice-field"><label for="optional${index}">${label}</label><select name="optional${index}" id="optional${index}"><option value="">선택하지 않음</option>${choices.map((choice) => `<option value="${choice}">${choice}</option>`).join('')}</select><input class="other-input" name="optionalOther${index}" placeholder="기타 내용을 직접 입력하세요" hidden /></div>`;
+  return `<fieldset class="choice-field"><legend>${label}</legend><div class="choice-options">${choices.map((choice) => `<label><input type="checkbox" name="optional${index}" value="${choice}"${choice === '기타 직접 입력' ? ` data-other-toggle="optionalOther${index}"` : ''} /><span>${choice}</span></label>`).join('')}</div><input class="other-input" name="optionalOther${index}" placeholder="기타 내용을 직접 입력하세요" hidden /></fieldset>`;
 }
-
 function activeOptionalOptions() {
   if (!selected) return [];
   const base = selected.optional || [];
@@ -289,12 +288,11 @@ function selectTemplate(id) {
     if (!isResearchTool() && evidenceFieldKeys().includes(input.name)) $('#sharedEvidence').value = input.value;
     buildPrompt();
   }));
-  $('#promptForm').querySelectorAll('select[name^="optional"]').forEach((select) => select.addEventListener('change', () => {
-    const other = $(`[name="optionalOther${select.name.replace('optional', '')}"]`);
-    if (other) { other.hidden = !select.value.includes('직접 입력'); if (other.hidden) other.value = ''; }
+    $('#promptForm').querySelectorAll('input[type="checkbox"][name^="optional"]').forEach((checkbox) => checkbox.addEventListener('change', () => {
+    const targetName = checkbox.dataset.otherToggle;
+    if (targetName) { const other = $(`[name="${targetName}"]`); if (other) { other.hidden = !checkbox.checked; if (other.hidden) other.value = ''; } }
     buildPrompt();
-  }));
-  $('#riskDot').className = `risk-dot ${selected.risk}`;
+  }));$('#riskDot').className = `risk-dot ${selected.risk}`;
   $('#riskLabel').textContent = `위험도 ${selected.risk}`;
   $('#riskText').textContent = selected.risk === '높음' ? '판단·승인·결정은 담당자가 해야 합니다. 실제 민감정보를 입력하지 마세요.' : 'AI 결과는 초안입니다. 사실, 일정, 수신자와 공개 가능 여부를 확인해 주세요.';
   const checklist = selected.risk === '높음' ? ['개인정보·비공개 정보가 없는지 확인합니다.', '관련 규정과 권한은 담당자가 확인합니다.', 'AI 출력만으로 승인·판단하지 않습니다.'] : ['공개 가능한 자료만 사용합니다.', '출처·수치·일정을 담당자가 확인합니다.', '최종 발신·결재 전 담당자가 검토합니다.'];
@@ -314,12 +312,12 @@ function buildPrompt() {
   });
   activeOptionalOptions().forEach((option, index) => {
     const label = optionLabel(option);
-    const choice = formData.get(`optional${index}`);
-    const other = formData.get(`optionalOther${index}`);
-    if (choice && choice !== '기타 직접 입력') lines.push(`- ${label}: ${choice}`);
-    if (choice === '기타 직접 입력' && other) lines.push(`- ${label}: ${other}`);
-  });
-  const tool = $('#toolSelect').value;
+    const choices = formData.getAll(`optional${index}`);
+    const other = formData.get(`optionalOther${index}`)?.trim();
+    const selectedChoices = choices.filter((choice) => choice !== '기타 직접 입력');
+    if (choices.includes('기타 직접 입력') && other) selectedChoices.push(other);
+    if (selectedChoices.length) lines.push(`- ${label}: ${selectedChoices.join(' / ')}`);
+  });  const tool = $('#toolSelect').value;
   const workflowGroup = selectedWorkflowGroup || selectedGroup || selected.group;
   const sharedContext = [
     `- 선택 업무군: ${workflowGroup}`,

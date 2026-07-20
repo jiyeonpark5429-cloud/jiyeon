@@ -3,3 +3,9 @@
 .choice-field label { color: var(--ink); }
 .choice-field select { background: #fff; }
 .other-input { margin-top: 7px; }
+.choice-field { padding:0; border:0; }
+.choice-field legend { padding:0; margin-bottom:7px; font-size:13px; font-weight:700; }
+.choice-options { display:flex; flex-wrap:wrap; gap:7px; }
+.choice-options label { display:inline-flex; align-items:center; gap:5px; margin:0; padding:6px 8px; border:1px solid #cdddea; border-radius:6px; color:#48627b; background:#fff; font-size:12px; font-weight:500; cursor:pointer; }
+.choice-options label:has(input:checked) { border-color:var(--blue); color:var(--blue); background:#eef6ff; font-weight:700; }
+.choice-options input { width:auto; margin:0; accent-color:var(--blue); }
