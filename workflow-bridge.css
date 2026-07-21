@@ -128,3 +128,6 @@
 .notebooklm-source-guide b { display:block; color:#07509f; font-size:12px; }
 .notebooklm-source-guide ol { margin:6px 0 5px; padding-left:18px; }
 .notebooklm-source-guide small { color:#607891; }
+.recommended-form { display:flex; align-items:center; justify-content:space-between; gap:8px; margin:9px 0; padding:8px 9px; border:1px solid #c9dced; border-radius:6px; background:#fff; font-size:11px; }
+.recommended-form b { color:#315a80; }
+.recommended-form a { color:#07509f; font-weight:800; }

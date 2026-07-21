@@ -250,6 +250,28 @@ function exampleValue(key) {
   return selected.example[key] || '';
 }
 
+const documentFormByGroup = {
+  '교육·학사 운영': '안내문·FAQ',
+  '학생·입학·국제 지원': '안내문·FAQ',
+  '연구·산학 지원': '공개자료 조사·비교 보고서',
+  '기획·성과·평가': '공개자료 조사·비교 보고서',
+  '일반행정·인사·안전': '안내문·FAQ',
+  '재무·계약·시설': '공개자료 조사·비교 보고서',
+  '홍보·대외협력': '홍보 콘텐츠 초안',
+  '정보화·디지털': '안내문·FAQ',
+  '도서관·학술서비스': '안내문·FAQ',
+  '평생·지역협력': '운영 개선 참고안',
+  '창업·지역협력': '안내문·FAQ',
+  '생활관·시설 운영': '안내문·FAQ',
+  '인권·상담 지원': '안내문·FAQ',
+  '문화·전시 운영': '홍보 콘텐츠 초안'
+};
+
+function recommendedFormName() {
+  if (!selected) return '';
+  if (selected.stage === '분석·검토') return '출처 대조·검토 체크리스트';
+  return documentFormByGroup[selected.group] || '';
+}
 const documentTemplateByGroup = {
   '교육·학사 운영': 'academic-calendar',
   '학생·입학·국제 지원': 'student-support-brief',
@@ -286,7 +308,9 @@ function renderTemplateExample() {
   if (!selected || !box) return;
   const fields = activeFields();
   box.hidden = false;
-  box.innerHTML = `<span>대표 실습 예시</span><p>${selected.title} · ${selected.group}</p><ul>${fields.map(([key, label]) => `<li><b>${label}</b>${exampleValue(key) || '예시 준비 중'}</li>`).join('')}</ul><button type="button" id="applyExample">이 예시로 시작하기</button>`;
+  const formName = recommendedFormName();
+  const formLink = formName ? `<div class="recommended-form"><b>추천 문서 양식</b><a href="#forms">${formName} 내려받기 →</a></div>` : '';
+  box.innerHTML = `<span>대표 실습 예시</span><p>${selected.title} · ${selected.group}</p>${formLink}<ul>${fields.map(([key, label]) => `<li><b>${label}</b>${exampleValue(key) || '예시 준비 중'}</li>`).join('')}</ul><button type="button" id="applyExample">이 예시로 시작하기</button>`;
   $('#applyExample').addEventListener('click', () => {
     fields.forEach(([key]) => {
       const input = $(`#formFields [name="${key}"]`);
