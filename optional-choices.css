@@ -9,3 +9,6 @@
 .choice-options label { display:inline-flex; align-items:center; gap:5px; margin:0; padding:6px 8px; border:1px solid #cdddea; border-radius:6px; color:#48627b; background:#fff; font-size:12px; font-weight:500; cursor:pointer; }
 .choice-options label:has(input:checked) { border-color:var(--blue); color:var(--blue); background:#eef6ff; font-weight:700; }
 .choice-options input { width:auto; margin:0; accent-color:var(--blue); }
+.research-period-field { display:block; margin:14px 0 4px; }
+.research-period-field select { display:block; box-sizing:border-box; width:100%; margin-top:7px; border:1px solid #b9d2e8; border-radius:7px; padding:10px; color:#29465f; background:#f8fbfe; font:600 13px 'Noto Sans KR', sans-serif; }
+.research-period-field select:focus { outline:2px solid #8ab8e2; outline-offset:1px; }

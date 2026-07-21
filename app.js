@@ -159,6 +159,14 @@ function isResearchTool() {
   return selected?.stage === '근거 탐색' || ['Perplexity', 'Liner'].includes($('#toolSelect')?.value);
 }
 
+function researchPeriodField() {
+  return `<label class="research-period-field">자료 시기 (when)<small class="field-guide">언제 게시·수정된 자료를 우선 찾을지 고릅니다. 기본값은 최신 공고와 안내를 빠르게 찾기 위한 최근 3개월입니다. 오래된 규정이 필요한 경우에는 기간을 넓히되, 현행 여부를 함께 확인하세요.</small><select name="researchPeriod"><option value="최근 3개월 (최신 공고·공지 우선)" selected>최근 3개월 — 최신 공고·공지 우선</option><option value="최근 1년 (최근 운영 기준 확인)">최근 1년 — 최근 운영 기준 확인</option><option value="최근 3년 (운영 사례 비교 포함)">최근 3년 — 운영 사례 비교 포함</option><option value="최근 5년 (중장기 변화 확인)">최근 5년 — 중장기 변화 확인</option><option value="기간 제한 없음 (현행 여부·게시일 필수 확인)">기간 제한 없음 — 현행 여부·게시일 필수 확인</option></select></label>`;
+}
+
+function researchPeriodInstruction(formData) {
+  const period = formData.get('researchPeriod') || '최근 3개월 (최신 공고·공지 우선)';
+  return `자료 시기(when)는 ‘${period}’입니다. 현재 시점을 기준으로 해당 기간에 게시되었거나 최종 수정된 자료를 우선 활용하세요. 규정·지침 원문이 기간보다 오래된 경우에는 현행본인지 확인하고, 각 자료의 게시일 또는 최종 수정일을 반드시 함께 표시하세요.`;
+}
 function isReviewStage() {
   return selected?.stage === '분석·검토' && ($('#toolSelect')?.value || selected?.tool) === 'NotebookLM';
 }
@@ -303,10 +311,11 @@ function selectTemplate(id) {
   $('#outputTitle').textContent = selected.title;
   $('#toolSelect').value = selected.tool;
   const required = activeFields().map(([key, label, placeholder]) => `<label>${label}<small class="field-guide">${fieldGuide(key)}</small><textarea name="${key}" placeholder="${placeholder}">${inheritedValue(key, selected.example[key])}</textarea></label>`).join('');
+  const researchTiming = isResearchTool() ? researchPeriodField() : '';
   const options = activeOptionalOptions();
   const optional = options.length ? `<details><summary>추가 선택 사항 열기</summary><p class="choice-guide">여러 항목을 함께 고를 수 있습니다. GPT·Claude에서는 작성 방식도 선택할 수 있으며, 선택하지 않으면 실습용 즉시 완성으로 진행됩니다.</p>${options.map(optionalField).join('')}</details>` : '';
     const notebookGuide = isReviewStage() ? `<div class="notebooklm-source-guide"><b>NotebookLM 소스 등록 순서</b><ol><li>Perplexity·Liner에서 받은 공식 URL을 웹페이지 소스로 등록</li><li>GPT·Claude에서 만든 문서 초안을 파일 또는 텍스트 소스로 등록</li><li>아래 프롬프트로 두 소스의 일치·차이·누락을 대조</li></ol><small>조사 결과를 이 화면에 다시 붙여 넣을 필요가 없습니다.</small></div>` : '';
-  $('#formFields').innerHTML = notebookGuide + required + optional;
+  $('#formFields').innerHTML = notebookGuide + required + researchTiming + optional;
   renderTemplateExample();
   $('#promptForm').querySelectorAll('textarea, input, select').forEach((input) => input.addEventListener('input', () => {
     if (selected?.stage === '근거 탐색' && input.name === 'topic' && input.value.trim()) $('#sharedTopic').value = input.value.trim();
@@ -389,7 +398,7 @@ function buildPrompt() {
   ].filter(Boolean).join('\n');  const request = isReviewStage()
     ? `${notebookReviewRequest()}${conciseReviewRequest(selected.request)}`
     : isResearchTool()
-    ? `조사 대상 기관·범위와 자료 출처 조건을 우선하여 탐색하세요. 자료 출처 조건이 비어 있으면 신뢰할 수 있는 출처를 폭넓게 탐색하되, 대학 공식자료·정부/공공기관·전문기관·언론/사례 등 출처 유형을 구분해 표시하세요. 기관별 고유 정보는 조사 대상 기관이 명시된 경우에만 정리하고, 확인되지 않은 내용은 [기관 내부 확인 필요]로 표시하세요.
+    ? `${researchPeriodInstruction(formData)}\n\n조사 대상 기관·범위와 자료 출처 조건을 우선하여 탐색하세요. 자료 출처 조건이 비어 있으면 신뢰할 수 있는 출처를 폭넓게 탐색하되, 대학 공식자료·정부/공공기관·전문기관·언론/사례 등 출처 유형을 구분해 표시하세요. 기관별 고유 정보는 조사 대상 기관이 명시된 경우에만 정리하고, 확인되지 않은 내용은 [기관 내부 확인 필요]로 표시하세요.
 
 최종 결과는 조사 항목별 핵심 내용, 출처 URL, 게시·수정 시점, 출처 유형, 확인 필요 사항을 구분하여 정리해주세요.`
     : `${selected.request}` + (documentCompletionRule(tool, formData) ? `\n\n${documentCompletionRule(tool, formData)}` : '');  const safety = selected.risk === '높음' ? '개인정보·비공개 정보는 사용하지 말고, 승인·평가·계약 등 판단을 대신하지 마세요.' : '확정되지 않은 기관 고유 정보는 [기관 내부 확인 필요]로 표시하고, 사실을 임의로 만들지 마세요.';
