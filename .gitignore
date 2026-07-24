@@ -17,3 +17,19 @@ Thumbs.db
 /*.txt
 /*.md
 !/README.md
+
+# Local JavaScript dependencies and generated build files
+node_modules/
+.pnpm-store/
+dist/
+*.tsbuildinfo
+vite-server*.log
+vite.config.js
+vite.config.d.ts
+app.bundle.js
+app.bundle.css
+
+# Earlier standalone practice build files (not used by the React app)
+practice-app.js
+practice-data.js
+practice.css
